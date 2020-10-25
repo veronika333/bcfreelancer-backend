@@ -1,10 +1,25 @@
 const express = require('express');
-const app = express();
-require('dotenv').config()
+require('dotenv').config();
+const mongoose = require('mongoose');
 
-app.get('/', (req, res) => {
-    res.send('hello from node');
-});
+//importing routes
+const freelancerRoutes = require('./routes/freelancer')
+
+// app
+const app = express();
+
+//db
+mongoose.connect(process.env.DATABASE, {
+    useNewUrlParser: true,
+    useCreateIndex: true
+})
+.then(() => console.log('Database connected'))
+mongoose.connection.on('error', err => {
+    console.log(`DB connection error: ${err.message}`)
+  });
+  
+// routes middleware
+app.use("/api", freelancerRoutes);
 
 const port = process.env.PORT || 8000
 
