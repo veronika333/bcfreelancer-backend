@@ -64,7 +64,7 @@ exports.deleteFreelancer = async (req, res) => {
 
 exports.updateFreelancer = async (req, res) => {
     try{
-        const updateFreelancer = await Freelancer.updateOne({ _id: req.params.freelancerId},
+        const updateFreelancer = await Freelancer.findOneAndUpdate({ _id: req.params.freelancerId},
         { $set: {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
@@ -76,6 +76,7 @@ exports.updateFreelancer = async (req, res) => {
             finnishSkills: req.body.finnishSkills,
             status: req.body.status,
             broker: req.body.broker,
+            company: req.body.company,
             date: req.body.date,
             palkkatoive: req.body.palkkatoive,
             huom: req.body.huom,

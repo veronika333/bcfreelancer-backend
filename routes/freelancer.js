@@ -8,9 +8,9 @@ const { create } = require("../controllers/freelancer");
 
 router.get('/', sayHi);
 router.get('/allfreelancers', allFreelancers);
-router.get('/:freelancerId', oneFreelancer);
+router.get('/freelancer/:freelancerId', oneFreelancer);
 router.put('/createfreelancer', createFreelancer);
-router.delete('/:freelancerId', deleteFreelancer);
-router.patch('/:freelancerId', updateFreelancer);
+router.delete('/freelancer/:freelancerId', deleteFreelancer);
+router.patch('/freelancer/:freelancerId', updateFreelancer);
 
 module.exports = router;
