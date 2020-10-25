@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
-const freelancerSchema = new mongoose.Schema({
-_id: new mongoose.Schema.Types.ObjectId,
- fisrtName: {
+const FreelancerSchema = mongoose.Schema({
+ firstName: {
    type: String,
    required: true,  
    maxlength: 25
@@ -39,7 +38,7 @@ required: true
     required: true
  },
  finnishSkills: {
- type: Boolean,
+ type: String,
  required: true
  },
  status: {
@@ -49,11 +48,14 @@ required: true
  broker: {
     type: String
  },
+ company: {
+     type: String
+ },
  date: {
-type: Date,
+type: String,
  },
  palkkatoive: {
-type: Number
+type: String
  },
  huom: {
 type: String
@@ -69,4 +71,4 @@ type: String
  }
 });
 
-module.exports = mongoose.model("Freelancer", freelancerSchema);
+module.exports = mongoose.model("Freelancer", FreelancerSchema);

@@ -1,6 +1,7 @@
 const express = require('express');
 require('dotenv').config();
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 //importing routes
 const freelancerRoutes = require('./routes/freelancer')
@@ -18,6 +19,8 @@ mongoose.connection.on('error', err => {
     console.log(`DB connection error: ${err.message}`)
   });
   
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 // routes middleware
 app.use("/api", freelancerRoutes);
 
