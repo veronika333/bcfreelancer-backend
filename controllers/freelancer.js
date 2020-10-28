@@ -26,8 +26,7 @@ exports.oneFreelancer = async (req, res) => {
 // create new freelancer with the model Freelancer and submit
 exports.createFreelancer = async (req, res) => {
     const freelancer = new Freelancer({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
+        name: req.body.name,
         phone: req.body.phone,
         email: req.body.email,
         category: req.body.category,
@@ -68,8 +67,7 @@ exports.updateFreelancer = async (req, res) => {
     try{
         const updateFreelancer = await Freelancer.findOneAndUpdate({ _id: req.params.freelancerId},
         { $set: {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
+            name: req.body.name,
             email: req.body.email,
             category: req.body.category,
             location: req.body.location,

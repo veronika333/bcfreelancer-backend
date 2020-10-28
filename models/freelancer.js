@@ -1,15 +1,9 @@
 const mongoose = require('mongoose');
 
 const FreelancerSchema = mongoose.Schema({
- firstName: {
+  name: {
    type: String,
-   required: true,  
-   maxlength: 25
- },
- lastName: {
-    type: String,
-    required: true,  
-    maxlength: 30
+   required: true,
   },
  phone: {
   type: Number,
