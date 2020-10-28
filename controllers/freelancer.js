@@ -43,7 +43,9 @@ exports.createFreelancer = async (req, res) => {
         huom: req.body.huom,
         techRating: req.body.techRating,
         cultureFit: req.body.cultureFit,
-        huonoa: req.body.huonoa
+        huonoa: req.body.huonoa,
+        contactedWhenBy: req.body.contactedWhenBy,
+        lineColor: req.body.lineColor
     });
     try{
         const savedFreelancer = await freelancer.save();
@@ -83,6 +85,8 @@ exports.updateFreelancer = async (req, res) => {
             techRating: req.body.techRating,
             cultureFit: req.body.cultureFit,
             huonoa: req.body.huonoa,
+            contactedWhenBy: req.body.contactedWhenBy,
+            lineColor: req.body.lineColor
         }});
         res.json(updateFreelancer);
     } catch(err) {

@@ -68,6 +68,12 @@ type: String
  },
  huonoa: {
 type: String
+ },
+ contactedWhenBy: {
+    type: String
+ },
+ lineColor: {
+    type: String
  }
 });
 
