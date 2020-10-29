@@ -26,6 +26,7 @@ exports.oneFreelancer = async (req, res) => {
 // create new freelancer with the model Freelancer and submit
 exports.createFreelancer = async (req, res) => {
     const freelancer = new Freelancer({
+        star: req.body.star,
         name: req.body.name,
         phone: req.body.phone,
         email: req.body.email,
@@ -33,7 +34,7 @@ exports.createFreelancer = async (req, res) => {
         location: req.body.location,
         education: req.body.education,
         seniority: req.body.seniority,
-        finnishSkills: req.body.finnishSkills,
+        fi: req.body.fi,
         status: req.body.status,
         broker: req.body.broker,
         company: req.body.company,
@@ -43,7 +44,8 @@ exports.createFreelancer = async (req, res) => {
         techRating: req.body.techRating,
         cultureFit: req.body.cultureFit,
         huonoa: req.body.huonoa,
-        contactedWhenBy: req.body.contactedWhenBy,
+        contactedBy: req.body.contactedBy,
+        available: req.body.available,
         lineColor: req.body.lineColor
     });
     try{
@@ -67,23 +69,27 @@ exports.updateFreelancer = async (req, res) => {
     try{
         const updateFreelancer = await Freelancer.findOneAndUpdate({ _id: req.params.freelancerId},
         { $set: {
+            star: req.body.star,
             name: req.body.name,
             email: req.body.email,
             category: req.body.category,
             location: req.body.location,
             education: req.body.education,
             seniority: req.body.seniority,
-            finnishSkills: req.body.finnishSkills,
+            //finnishSkills: req.body.finnishSkills,
+            fi: req.body.fi,
             status: req.body.status,
             broker: req.body.broker,
             company: req.body.company,
             date: req.body.date,
+            contactedBy: req.body.contactedBy,
             palkkatoive: req.body.palkkatoive,
             huom: req.body.huom,
             techRating: req.body.techRating,
             cultureFit: req.body.cultureFit,
             huonoa: req.body.huonoa,
-            contactedWhenBy: req.body.contactedWhenBy,
+            available: req.body.available,
+            //contactedWhenBy: req.body.contactedWhenBy,
             lineColor: req.body.lineColor
         }});
         res.json(updateFreelancer);

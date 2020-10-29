@@ -1,18 +1,19 @@
 const mongoose = require('mongoose');
 
 const FreelancerSchema = mongoose.Schema({
-  name: {
+  star: {
+   type: String,
+  },
+   name: {
    type: String,
    required: true,
   },
  phone: {
   type: Number,
-  required: true
   },
  email: {
      type: String,
      trim: true, 
-     required: true,
      unique: true
  }, 
  category: {
@@ -21,22 +22,18 @@ required: true,
  },
  location: {
 type: String,
-required: true
  },
  education: {
     type: String,
-    required: true
  },
  seniority: {
     type: String,
-    required: true
  },
- finnishSkills: {
+ fi: {
  type: String,
  },
  status: {
     type: String,
-    required: true
  },
  broker: {
     type: String
@@ -62,7 +59,10 @@ type: String
  huonoa: {
 type: String
  },
- contactedWhenBy: {
+ contactedBy: {
+    type: String
+ },
+ available: {
     type: String
  },
  lineColor: {
