@@ -2,13 +2,14 @@ const express = require('express');
 require('dotenv').config();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-
+var cors = require('cors')
+var app = express()
+ 
 //importing routes
 const freelancerRoutes = require('./routes/freelancer')
 
 // app
-const app = express();
-
+app.use(cors())
 //db
 mongoose.connect(process.env.DATABASE, {
     useNewUrlParser: true,

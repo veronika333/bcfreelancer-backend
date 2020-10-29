@@ -33,7 +33,6 @@ required: true
  },
  finnishSkills: {
  type: String,
- required: true
  },
  status: {
     type: String,
