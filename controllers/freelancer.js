@@ -76,7 +76,6 @@ exports.updateFreelancer = async (req, res) => {
             location: req.body.location,
             education: req.body.education,
             seniority: req.body.seniority,
-            //finnishSkills: req.body.finnishSkills,
             fi: req.body.fi,
             status: req.body.status,
             broker: req.body.broker,
@@ -89,7 +88,6 @@ exports.updateFreelancer = async (req, res) => {
             cultureFit: req.body.cultureFit,
             huonoa: req.body.huonoa,
             available: req.body.available,
-            //contactedWhenBy: req.body.contactedWhenBy,
             lineColor: req.body.lineColor
         }});
         res.json(updateFreelancer);
@@ -98,32 +96,6 @@ exports.updateFreelancer = async (req, res) => {
     }
 }
 
-//search freelancers by query
-// exports.freelancersBySearch = async (req, res) => {
-//     //create query object to hold sear value and category value
-//     const query = {};
-  
-//     //assign search value to query.name
-//     if (req.query.search) {
-//       query.name = { $regex: req.query.search, $options: "i" };
-//     }
-  
-//     //assign category value to query.category
-//     if (req.query.category && req.query.category != "All") {
-//       query.category = req.query.category;
-//     }
-  
-//     //find the product based on query product with 2 properties  - search and category
-//     try {
-//       const freelancers = await Freelancer.find(query).select("-photo");
-//       res.json(freelancers);
-//     } catch (err) {
-//       return res.status(404).json({
-//         error: errorHandler(err),
-//       });
-//     }
-//   };
-
-exports.freelancerById = (req, res) => {
-Freelancer.findById
-}
+// exports.freelancerById = (req, res) => {
+// Freelancer.findById
+// }
