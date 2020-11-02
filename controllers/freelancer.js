@@ -98,32 +98,37 @@ exports.updateFreelancer = async (req, res) => {
     }
 }
 
-//search freelancers by query
-// exports.freelancersBySearch = async (req, res) => {
-//     //create query object to hold sear value and category value
-//     const query = {};
-  
-//     //assign search value to query.name
-//     if (req.query.search) {
-//       query.name = { $regex: req.query.search, $options: "i" };
-//     }
-  
-//     //assign category value to query.category
-//     if (req.query.category && req.query.category != "All") {
-//       query.category = req.query.category;
-//     }
-  
-//     //find the product based on query product with 2 properties  - search and category
-//     try {
-//       const freelancers = await Freelancer.find(query).select("-photo");
-//       res.json(freelancers);
-//     } catch (err) {
-//       return res.status(404).json({
-//         error: errorHandler(err),
-//       });
-//     }
-//   };
+// search freelancers
+exports.searchFreelancers = (req, res) => {
+    // creating query object to hold search values
+    const query = {}
+    // assigning search value to query.category
+if(req.query.searchedLocation
+    && req.query.searchedLocation != "All"){
+query.location = {$regex: req.query.searchedLocation, $options: 'i'} // i - used for case insensitivity
+}
+// assigning location value to query.category
+if(req.query.category){
+    query.category = req.query.category
+}
+// finding the product based on query object with 2 properties: category and searchedLocation
+Freelancer.find(query, (err, freelancers) => {
+if(err){
+    return res.status(400).json({message: err})
+}
+res.json(freelancers)
+})
+}
 
 exports.freelancerById = (req, res) => {
 Freelancer.findById
+}
+
+exports.allLocations = async (req, res) => {
+    try {
+        const freelancers = await Freelancer.find();
+        res.json(freelancers.location);
+    } catch(err) {
+        res.json({message: err});
+    }
 }
