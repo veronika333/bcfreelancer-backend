@@ -109,7 +109,8 @@ query.location = {$regex: req.query.searchedLocation, $options: 'i'} // i - used
 }
 // assigning location value to query.category
 if(req.query.category){
-    query.category = req.query.category
+    //query.category = req.query.category
+    query.category = {$regex: req.query.category, $options: "i"}
 }
 // finding the product based on query object with 2 properties: category and searchedLocation
 Freelancer.find(query, (err, freelancers) => {
