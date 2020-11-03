@@ -76,7 +76,6 @@ exports.updateFreelancer = async (req, res) => {
             location: req.body.location,
             education: req.body.education,
             seniority: req.body.seniority,
-            //finnishSkills: req.body.finnishSkills,
             fi: req.body.fi,
             status: req.body.status,
             broker: req.body.broker,
@@ -89,7 +88,6 @@ exports.updateFreelancer = async (req, res) => {
             cultureFit: req.body.cultureFit,
             huonoa: req.body.huonoa,
             available: req.body.available,
-            //contactedWhenBy: req.body.contactedWhenBy,
             lineColor: req.body.lineColor
         }});
         res.json(updateFreelancer);
@@ -102,16 +100,19 @@ exports.updateFreelancer = async (req, res) => {
 exports.searchFreelancers = (req, res) => {
     // creating query object to hold search values
     const query = {}
-    // assigning search value to query.category
+    // assigning search value to query
 if(req.query.searchedLocation
     && req.query.searchedLocation != "All"){
 query.location = {$regex: req.query.searchedLocation, $options: 'i'} // i - used for case insensitivity
 }
-// assigning location value to query.category
+// assigning location value to query
 if(req.query.category){
     //query.category = req.query.category
     query.category = {$regex: req.query.category, $options: "i"}
 }
+// assigning language value to query.language
+if(req.query.language && req.query.language != "All")
+query.fi = {$regex: req.query.language, $options: "i"}
 // finding the product based on query object with 2 properties: category and searchedLocation
 Freelancer.find(query, (err, freelancers) => {
 if(err){
@@ -121,15 +122,3 @@ res.json(freelancers)
 })
 }
 
-exports.freelancerById = (req, res) => {
-Freelancer.findById
-}
-
-exports.allLocations = async (req, res) => {
-    try {
-        const freelancers = await Freelancer.find();
-        res.json(freelancers.location);
-    } catch(err) {
-        res.json({message: err});
-    }
-}
