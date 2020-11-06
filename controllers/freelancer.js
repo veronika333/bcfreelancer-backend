@@ -112,7 +112,13 @@ if(req.query.category){
 }
 // assigning language value to query.language
 if(req.query.language && req.query.language != "All")
-query.fi = {$regex: req.query.language, $options: "i"}
+{query.fi = {$regex: req.query.language, $options: "i"}};
+
+// if(req.query.availableNow && req.query.availableNow != "All"){
+//     query.lineColor = {$regex: req.query.availableNow, $option: "i"};
+// }
+if(req.query.availableNow && req.query.availableNow != "All")
+{query.lineColor = {$regex: req.query.availableNow, $options: "i"}};
 // finding the product based on query object with 2 properties: category and searchedLocation
 Freelancer.find(query, (err, freelancers) => {
 if(err){
