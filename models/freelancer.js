@@ -67,6 +67,10 @@ type: String
  },
  lineColor: {
     type: String
+ },
+ cv: {
+    data: Buffer,
+    contentType: String
  }
 });
 

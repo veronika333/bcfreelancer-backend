@@ -9,7 +9,7 @@ const {sayHi, allFreelancers, oneFreelancer,
 router.get('/', sayHi);
 router.get('/allfreelancers', allFreelancers);
 router.get('/freelancer/:freelancerId', oneFreelancer);
-router.put('/createfreelancer', createFreelancer);
+router.post('/createfreelancer', createFreelancer);
 router.delete('/freelancer/:freelancerId', deleteFreelancer);
 router.patch('/freelancer/:freelancerId', updateFreelancer);
 router.get('/freelancers/search', searchFreelancers);
