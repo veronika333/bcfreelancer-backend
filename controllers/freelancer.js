@@ -17,14 +17,22 @@ exports.allFreelancers = async (req, res) => {
     }
 }
 
-// get one freelancer
-exports.oneFreelancer = async (req, res) => {
-    try {
-        const freelancer = await Freelancer.findById(req.params.freelancerId);
-        res.json(freelancer);
-    } catch(err) {
-        res.status(404).json({message: err});
-    }
+// middlewear: freelancer by id
+exports.freelancerById = (req, res, next, id) => {
+    Freelancer.findById(id).exec((err, freelancer) => {
+if(err || !freelancer){
+    return res.status(400).json({
+        error: "Freelancer not found"
+    })
+}
+req.freelancer = freelancer
+next();
+    })
+}
+
+exports.oneFreelancer = (req, res) => {
+    req.freelancer.cv = undefined
+    return res.json(req.freelancer)
 }
 
 // create new freelancer with the model Freelancer and submit
@@ -37,30 +45,14 @@ form.parse(req, (err, fields, files) => {
             error: 'CV could not be uploaded' 
         })
     }
-    console.log('Fields, fields')
-//   const freelancer = new Freelancer({
-//         star: req.body.star,
-//         name: req.body.name,
-//         phone: req.body.phone,
-//         email: req.body.email,
-//         category: req.body.category,
-//         location: req.body.location,
-//         education: req.body.education,
-//         seniority: req.body.seniority,
-//         fi: req.body.fi,
-//         status: req.body.status,
-//         broker: req.body.broker,
-//         company: req.body.company,
-//         date: req.body.date,
-//         palkkatoive: req.body.palkkatoive,
-//         huom: req.body.huom,
-//         techRating: req.body.techRating,
-//         cultureFit: req.body.cultureFit,
-//         huonoa: req.body.huonoa,
-//         contactedBy: req.body.contactedBy,
-//         available: req.body.available,
-//         lineColor: req.body.lineColor
-//     });  
+   // console.log('Fields, fields')
+   // check for required fields
+   const { name, email, category } = fields
+   if(!name || !email || !category) {
+    return res.status(400).json({
+        error: 'Name, email and category fields are required' 
+    })
+   }
 const freelancer = new Freelancer(fields)
 //1kb = 1000
 //1mb = 1000000
@@ -82,54 +74,105 @@ if(err) {
 }
 res.json(result)
 })
-    // try{
-    //     const savedFreelancer = await freelancer.save();
-    //     res.status(201).json(savedFreelancer);
-    // } catch(err) {
-    //     res.status(404).json({ message: err });
-    // } 
 })
 }
 
-exports.deleteFreelancer = async (req, res) => {
-    try{
-        const removeFreelancer = await Freelancer.remove({_id: req.params.freelancerId});
-        res.json(removeFreelancer);
-    } catch(err) {
-        res.status(204).json({ message: err})
-    }
+// exports.deleteFreelancer = async (req, res) => {
+//     try{
+//         const removeFreelancer = await Freelancer.remove({_id: req.params.freelancerId});
+//         res.json(removeFreelancer);
+//     } catch(err) {
+//         res.status(204).json({ message: err})
+//     }
+// }
+
+exports.deleteFreelancer = (req, res) => {
+    const freelancer = req.freelancer
+    freelancer.remove((err, deletedFreelancer) => {
+if(err) {
+    return res.status(400).json({
+        message: err
+    })
+}
+res.json({
+    // deletedFreelancer,
+    "message": "Freelancer was deleted successfully"
+})
+    })
 }
 
-exports.updateFreelancer = async (req, res) => {
-    try{
-        const updateFreelancer = await Freelancer.findOneAndUpdate({ _id: req.params.freelancerId},
-        { $set: {
-            star: req.body.star,
-            name: req.body.name,
-            email: req.body.email,
-            category: req.body.category,
-            location: req.body.location,
-            education: req.body.education,
-            seniority: req.body.seniority,
-            fi: req.body.fi,
-            status: req.body.status,
-            broker: req.body.broker,
-            company: req.body.company,
-            date: req.body.date,
-            contactedBy: req.body.contactedBy,
-            palkkatoive: req.body.palkkatoive,
-            huom: req.body.huom,
-            techRating: req.body.techRating,
-            cultureFit: req.body.cultureFit,
-            huonoa: req.body.huonoa,
-            available: req.body.available,
-            lineColor: req.body.lineColor
-        }});
-        res.json(updateFreelancer);
-    } catch(err) {
-        res.status(404).json({ message: err });
+// updating with pdf
+exports.updateFreelancer = (req, res) => {
+    let form = new formidable.IncomingForm()
+form.keepExtensions = true
+form.parse(req, (err, fields, files) => {
+    if(err){
+        return res.status(400).json({
+            error: 'CV could not be uploaded' 
+        })
     }
+    // console.log('Fields, fields')
+     // check for required fields
+   const { name, email, category } = fields
+   if(!name || !email || !category) {
+    return res.status(400).json({
+        error: 'Name, email and category fields are required' 
+    })
+   }
+const freelancer = req.freelancer
+freelancer = _.extend(freelancer, fields);
+//1kb = 1000
+//1mb = 1000000
+if(files.cv){
+    //console.log('Files cv: ', files.cv)
+    if(files.cv.size > 1000000){
+        return res.status(400).json({
+            error: "CV file size should be less than 1mb"
+        })
+    }
+    freelancer.cv.data = fs.readFileSync(files.cv.path)
+    freelancer.cv.contentType = files.cv.type
 }
+freelancer.save((err, result) => {
+if(err) {
+    return res.status(400).json({
+        message: err
+    })
+}
+res.json(result)
+})
+})
+}
+// exports.updateFreelancer = async (req, res) => {
+//     try{
+//         const updateFreelancer = await Freelancer.findOneAndUpdate({ _id: req.params.freelancerId},
+//         { $set: {
+//             star: req.body.star,
+//             name: req.body.name,
+//             email: req.body.email,
+//             category: req.body.category,
+//             location: req.body.location,
+//             education: req.body.education,
+//             seniority: req.body.seniority,
+//             fi: req.body.fi,
+//             status: req.body.status,
+//             broker: req.body.broker,
+//             company: req.body.company,
+//             date: req.body.date,
+//             contactedBy: req.body.contactedBy,
+//             palkkatoive: req.body.palkkatoive,
+//             huom: req.body.huom,
+//             techRating: req.body.techRating,
+//             cultureFit: req.body.cultureFit,
+//             huonoa: req.body.huonoa,
+//             available: req.body.available,
+//             lineColor: req.body.lineColor
+//         }});
+//         res.json(updateFreelancer);
+//     } catch(err) {
+//         res.status(404).json({ message: err });
+//     }
+// }
 
 // search freelancers
 exports.searchFreelancers = (req, res) => {
@@ -163,3 +206,10 @@ res.json(freelancers)
 })
 }
 
+exports.cv = (req, res, next) => {
+    if(req.freelancer.cv.data){
+        res.set('Content-Type', req.freelancer.cv.contentType)
+        return res.send(req.freelancer.cv.data)
+    }
+    next();
+};
