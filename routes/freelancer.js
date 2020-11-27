@@ -5,7 +5,9 @@ const {sayHi, allFreelancers, oneFreelancer,
     createFreelancer, deleteFreelancer, updateFreelancer,
     searchFreelancers,
     freelancerById,
-    cv
+    cv,
+    deleteCV,
+    removeCV,
 } = require("../controllers/freelancer")
 
 router.get('/', sayHi);
@@ -17,6 +19,9 @@ router.delete('/freelancer/:freelancerId', deleteFreelancer);
 router.put('/freelancer/:freelancerId', updateFreelancer);
 router.get('/freelancers/search', searchFreelancers);
 router.get('/freelancer/cv/:freelancerId', cv)
+router.put('/freelancer/:freelancerId', deleteCV)
+//router.delete('/freelancer/cv/:freelancerId', removeCV)
+router.put('/freelancer/removecv/:freelancerId', removeCV)
 //added
 router.param('freelancerId', freelancerById)
 

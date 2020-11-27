@@ -1,5 +1,5 @@
 const formidable = require('formidable');
-const _ = require('lodash');
+const _ = require("lodash");
 const fs = require('fs')
 
 const Freelancer = require("../models/freelancer")
@@ -18,20 +18,33 @@ exports.allFreelancers = async (req, res) => {
 }
 
 // middlewear: freelancer by id
-exports.freelancerById = (req, res, next, id) => {
-    Freelancer.findById(id).exec((err, freelancer) => {
-if(err || !freelancer){
-    return res.status(400).json({
-        error: "Freelancer not found"
-    })
-}
-req.freelancer = freelancer
-next();
-    })
-}
+// exports.freelancerById = (req, res, next, id) => {
+//     Freelancer.findById(id).exec((err, freelancer) => {
+// if(err || !freelancer){
+//     return res.status(400).json({
+//         error: "Freelancer not found"
+//     })
+// }
+// req.freelancer = freelancer
+// next();
+//     })
+// }
+exports.freelancerById = async (req, res, next, id) => {
+    await Freelancer.findById(id)
+      .exec((err, freelancer) => {
+        if (err || !freelancer) {
+          res.status(400).json({
+            error: "Freelancer with the given ID is not found!",
+          });
+        }
+        req.freelancer = freelancer; //make found freelancer available in the req.freelancer
+        next();
+      });
+  };
+  
 
 exports.oneFreelancer = (req, res) => {
-    req.freelancer.cv = undefined
+    req.freelancer.cv = undefined;
     return res.json(req.freelancer)
 }
 
@@ -111,20 +124,20 @@ form.parse(req, (err, fields, files) => {
             error: 'CV could not be uploaded' 
         })
     }
-    // console.log('Fields, fields')
+    console.log('Fields', fields)
      // check for required fields
    const { name, email, category } = fields
-   if(!name || !email || !category) {
-    return res.status(400).json({
-        error: 'Name, email and category fields are required' 
-    })
-   }
-const freelancer = req.freelancer
+//    if(!name || !email || !category) {
+//     return res.status(400).json({
+//         error: 'Name, email and category fields are required' 
+//     })
+//    }
+let freelancer = req.freelancer
 freelancer = _.extend(freelancer, fields);
 //1kb = 1000
 //1mb = 1000000
 if(files.cv){
-    //console.log('Files cv: ', files.cv)
+    console.log('Files cv: ', files.cv)
     if(files.cv.size > 1000000){
         return res.status(400).json({
             error: "CV file size should be less than 1mb"
@@ -213,3 +226,47 @@ exports.cv = (req, res, next) => {
     }
     next();
 };
+
+exports.deleteCV = async (req, res) => {
+    try {
+   const freelancer = await Freelancer.findOneAndUpdate(
+       {_id: req.freelancer._id},
+       {$unset: req.freelancer.cv},
+       {new: true},
+   );
+   res.json({freelancer})
+     } catch(err){
+         res.status(400).json({message: err})
+     }
+   
+}
+
+exports.removeCV = async (req, res) => {
+try {
+          const freelancer = await Freelancer.findOneAndUpdate(
+            { _id: req.freelancer._id },
+            { $unset: req.freelancer.cv },
+            { new: true }
+          );
+          res.json( {freelancer} );
+        } catch (err) {
+          res.status(400).json({
+            error: "You are not authorised to perform this action",
+          });
+        }
+}
+
+// exports.update = async (req, res) => {
+//     try {
+//       const user = await User.findOneAndUpdate(
+//         { _id: req.profile._id },
+//         { $set: req.body },
+//         { new: true }
+//       );
+//       res.json({ user });
+//     } catch (err) {
+//       res.status(400).json({
+//         error: "You are not authorised to perform this action",
+//       });
+//     }
+//   };
