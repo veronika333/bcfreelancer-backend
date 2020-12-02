@@ -63,7 +63,7 @@ type: String
     type: String
  },
  available: {
-    type: String
+    type: Date
  },
  lineColor: {
     type: String

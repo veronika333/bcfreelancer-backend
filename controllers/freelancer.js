@@ -71,6 +71,7 @@ exports.updateFreelancer = async (req, res) => {
         { $set: {
             star: req.body.star,
             name: req.body.name,
+            phone: req.body.phone,
             email: req.body.email,
             category: req.body.category,
             location: req.body.location,
@@ -120,6 +121,11 @@ if(req.query.language && req.query.language != "All")
 if(req.query.onPhzProjectNow && req.query.onPhzProjectNow != "All")
 {query.lineColor = {$regex: req.query.onPhzProjectNow, $options: "i"}};
 // finding the product based on query object with 2 properties: category and searchedLocation
+
+if (req.query.availabilityDate) {
+  query.available = { $lte: req.query.availabilityDate };
+ }
+
 Freelancer.find(query, (err, freelancers) => {
 if(err){
     return res.status(400).json({message: err})
@@ -127,4 +133,3 @@ if(err){
 res.json(freelancers)
 })
 }
-
