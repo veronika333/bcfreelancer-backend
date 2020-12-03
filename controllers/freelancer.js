@@ -1,6 +1,7 @@
 const formidable = require('formidable');
 const _ = require("lodash");
 const fs = require('fs')
+const str2ab = require('string-to-arraybuffer')
 
 const Freelancer = require("../models/freelancer")
 exports.sayHi = (req, res) => {
@@ -114,47 +115,70 @@ res.json({
     })
 }
 
-// updating with pdf
-exports.updateFreelancer = (req, res) => {
-    let form = new formidable.IncomingForm()
-form.keepExtensions = true
-form.parse(req, (err, fields, files) => {
-    if(err){
+exports.uploadCVFreelancer = async (req, res) => {
+    if(!req.files.cv) {
         return res.status(400).json({
             error: 'CV could not be uploaded' 
         })
     }
-    console.log('Fields', fields)
-     // check for required fields
-   const { name, email, category } = fields
-//    if(!name || !email || !category) {
-//     return res.status(400).json({
-//         error: 'Name, email and category fields are required' 
-//     })
-//    }
-let freelancer = req.freelancer
-freelancer = _.extend(freelancer, fields);
-//1kb = 1000
-//1mb = 1000000
-if(files.cv){
-    console.log('Files cv: ', files.cv)
-    if(files.cv.size > 1000000){
+    const { data, mimetype } = req.files.cv
+    const cv = { data, contentType: mimetype }
+    try {
+        const freelancer = await Freelancer.findOneAndUpdate(
+            { _id: req.freelancer._id },
+            { $set: { cv } },
+            { new: true }
+        );
+        return res.status(200).json(freelancer)
+    } catch (error) {
         return res.status(400).json({
-            error: "CV file size should be less than 1mb"
+            message: error
         })
     }
-    freelancer.cv.data = fs.readFileSync(files.cv.path)
-    freelancer.cv.contentType = files.cv.type
 }
-freelancer.save((err, result) => {
-if(err) {
-    return res.status(400).json({
-        message: err
+
+// updating with pdf
+exports.updateFreelancer = (req, res) => {
+    let form = new formidable.IncomingForm()
+    form.keepExtensions = true
+    form.parse(req, (err, fields, files) => {
+        console.log(files)
+        if(err){
+            return res.status(400).json({
+                error: 'CV could not be uploaded' 
+            })
+        }
+        // check for required fields
+        const { name, email, category } = fields
+        //    if(!name || !email || !category) {
+        //     return res.status(400).json({
+        //         error: 'Name, email and category fields are required' 
+        //     })
+        //    }
+        let freelancer = req.freelancer
+        freelancer = _.extend(freelancer, fields);
+        //1kb = 1000
+        //1mb = 1000000
+        if(files.cv){
+            console.log('Files cv: ', files.cv)
+            if(files.cv.size > 1000000){
+                return res.status(400).json({
+                    error: "CV file size should be less than 1mb"
+                }).send()
+            }
+            freelancer.cv.data = fs.readFileSync(files.cv.path)
+            freelancer.cv.contentType = files.cv.type
+        }
+        freelancer.save((err, result) => {
+            if(err) {
+                return res.status(400).json({
+                    message: err
+                }).send()
+            }
+            res.json(result)
+        })
+        res.status(200).send()
     })
-}
-res.json(result)
-})
-})
 }
 // exports.updateFreelancer = async (req, res) => {
 //     try{
@@ -245,7 +269,7 @@ exports.removeCV = async (req, res) => {
 try {
           const freelancer = await Freelancer.findOneAndUpdate(
             { _id: req.freelancer._id },
-            { $unset: req.freelancer.cv },
+            { $unset: { cv: '' } },
             { new: true }
           );
           res.json( {freelancer} );

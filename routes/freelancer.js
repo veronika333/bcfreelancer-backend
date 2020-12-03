@@ -3,23 +3,24 @@ const router = express.Router()
 
 const {sayHi, allFreelancers, oneFreelancer, 
     createFreelancer, deleteFreelancer, updateFreelancer,
+    uploadCVFreelancer,
     searchFreelancers,
     freelancerById,
     cv,
     deleteCV,
     removeCV,
 } = require("../controllers/freelancer")
-
 router.get('/', sayHi);
 router.get('/allfreelancers', allFreelancers);
 router.get('/freelancer/:freelancerId', oneFreelancer);
 router.post('/createfreelancer', createFreelancer);
 router.delete('/freelancer/:freelancerId', deleteFreelancer);
 // router.patch('/freelancer/:freelancerId', updateFreelancer);
-router.put('/freelancer/:freelancerId', updateFreelancer);
-router.get('/freelancers/search', searchFreelancers);
+router.post('/freelancer/cvupload/:freelancerId', uploadCVFreelancer);
+router.post('/freelancer/:freelancerId', updateFreelancer);
+router.get('/freelancers/search', searchFreelancers);   
 router.get('/freelancer/cv/:freelancerId', cv)
-router.put('/freelancer/:freelancerId', deleteCV)
+// router.put('/freelancer/:freelancerId', deleteCV)
 //router.delete('/freelancer/cv/:freelancerId', removeCV)
 router.put('/freelancer/removecv/:freelancerId', removeCV)
 //added
