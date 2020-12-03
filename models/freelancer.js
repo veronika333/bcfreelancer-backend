@@ -67,7 +67,13 @@ type: String
  },
  lineColor: {
     type: String
- }
+ },
+ introductionDate : {
+    type: Date
+ },
+ limitation : {
+    type: String
+ },
 });
 
 module.exports = mongoose.model("Freelancer", FreelancerSchema);
