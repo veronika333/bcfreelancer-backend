@@ -74,6 +74,12 @@ type: String
  limitation : {
     type: String
  },
+ lastContactDate : {   
+   type: Date
+ },
+ contractEndingDate : {
+    type: Date
+ },
 });
 
 module.exports = mongoose.model("Freelancer", FreelancerSchema);

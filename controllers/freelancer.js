@@ -89,7 +89,11 @@ exports.updateFreelancer = async (req, res) => {
             cultureFit: req.body.cultureFit,
             huonoa: req.body.huonoa,
             available: req.body.available,
-            lineColor: req.body.lineColor
+            lineColor: req.body.lineColor,
+            introductionDate: req.body.introductionDate,
+            limitation: req.body.limitation,
+            lastContactDate: req.body.lastContactDate,
+            contractEndingDate: req.body.contractEndingDate
         }});
         res.json(updateFreelancer);
     } catch(err) {
