@@ -133,3 +133,8 @@ if(err){
 res.json(freelancers)
 })
 }
+
+// exports.freelancerById = (req, res) => {
+// Freelancer.findById
+// }
+
